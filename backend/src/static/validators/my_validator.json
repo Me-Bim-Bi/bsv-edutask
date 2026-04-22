@@ -1,0 +1,16 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["my_string", "my_bool"],
+        "properties": {
+            "my_string": {
+                "bsonType": "string",
+                "description": "testing string",
+                "uniqueItems": true
+            },
+            "my_bool": {
+                "bsonType": "bool"
+            }
+        }
+    }
+}
