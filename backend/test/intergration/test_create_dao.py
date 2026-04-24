@@ -13,7 +13,7 @@ def ok_dao(monkeypatch):
             "required": ["my_string", "my_bool"],
             "additionalProperties": False,
             "properties": {
-                "_id": {},
+                "_id": {},  
                 "my_string": {"bsonType": "string"},
                 "my_bool": {"bsonType": "bool"}
             }
