@@ -13,28 +13,29 @@ def ok_dao(monkeypatch):
             "required": ["my_string", "my_bool"],
             "additionalProperties": False,
             "properties": {
-                "_id": {},   # <-- thêm dòng này (quan trọng)
+                "_id": {},
                 "my_string": {"bsonType": "string"},
                 "my_bool": {"bsonType": "bool"}
             }
         }
     }
 
-    # 1. set env FIRST
+    # set env FIRST
     monkeypatch.setenv(
         "MONGO_URL",
         "mongodb://root:root@localhost:27017/?authSource=admin"
     )
 
-    # 2. mock validator
+    # mock validator
     monkeypatch.setattr("src.util.dao.getValidator", lambda _: validator)
 
-    # 3. create DAO AFTER env is ready
+    # create DAO AFTER env is ready
     collection_name = f"test_{uuid.uuid4().hex}"
     dao = DAO(collection_name)
 
     yield dao
 
+    # Remove the entire collection after test finishes 
     dao.drop()
 
 @pytest.fixture
