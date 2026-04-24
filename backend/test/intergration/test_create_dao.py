@@ -1,7 +1,6 @@
 #imports
 import pytest
 import uuid
-import pymongo
 from src.util.dao import DAO
 from pymongo import errors
 
@@ -56,21 +55,30 @@ def test_return_object_data_string_is_correct(ok_data, ok_dao):
     #Assert
     assert test_return_object["my_string"] == ok_data["my_string"]
 
+
 @pytest.mark.integration
 def test_return_object_data_bool_is_correct(ok_data, ok_dao):
     #Arrange
-
     #Act
     test_return_object = ok_dao.create(ok_data)
-
     #Assert
-    assert test_return_object["my_bool"] is ok_data["my_bool"]
+    assert test_return_object["my_bool"] == ok_data["my_bool"]
+
+@pytest.mark.integration
+def test_data_persisted_in_db(ok_data, ok_dao):
+    # Act
+    test_return_object = ok_dao.create(ok_data)
+    # check DB
+    check_db = ok_dao.findOne(test_return_object["_id"]["$oid"])
+    # Assert dữ liệu thực sự nằm trong DB
+    assert check_db["my_string"] == ok_data["my_string"]
+    assert check_db["my_bool"] == ok_data["my_bool"]
 
 @pytest.mark.integration
 def test_return_object_has_id_attribute(ok_data, ok_dao):
     test_return_object = ok_dao.create(ok_data)
-    assert "_id" in test_return_object
-
+    assert "$oid" in test_return_object["_id"]
+    
 @pytest.mark.integration
 def test_return_object_has_no_unexpected_data(ok_data, ok_dao):
     test_return_object = ok_dao.create(ok_data)
@@ -101,7 +109,15 @@ def test_data_all_required_properties_wrong_data_type_bool(ok_dao):
 def test_data_all_required_properties_wrong_data_type_string(ok_dao):
     with pytest.raises((errors.WriteError, errors.OperationFailure)):
         ok_dao.create({"my_bool": True, "my_string": True})
-        
+
+@pytest.mark.integration
+def test_null_values_not_allowed(ok_dao):
+    with pytest.raises((errors.WriteError, errors.OperationFailure)):
+        ok_dao.create({
+            "my_string": None,
+            "my_bool": True
+        })
+       
 @pytest.mark.integration
 def test_unique_data(ok_dao):
     ok_dao.collection.create_index("my_string", unique=True)
@@ -109,4 +125,13 @@ def test_unique_data(ok_dao):
     ok_dao.create({"my_string": name, "my_bool": True})
     with pytest.raises(errors.DuplicateKeyError):
         ok_dao.create({"my_string": name, "my_bool": False})
+        
+@pytest.mark.integration
+def test_rejects_additional_properties(ok_dao):
+    with pytest.raises((errors.WriteError, errors.OperationFailure)):
+        ok_dao.create({
+            "my_string": "Jane",
+            "my_bool": True,
+            "unexpected": "field"
+        })
      
