@@ -26,6 +26,7 @@ def ok_dao():
     # Remove the entire collection after test finishes
     test_dao.drop()
 
+
 #Testing if input with data known to be compliant to validator creates expected return values
 @pytest.mark.integration
 def test_return_object_data_string_is_correct(ok_data, ok_dao):
@@ -67,26 +68,31 @@ def test_data_ok_with_only_string(ok_data_only_string, ok_dao):
     assert test_return_object["my_string"] == ok_data_only_string["my_string"]
     assert "my_bool" not in test_return_object or test_return_object.get("my_bool") is None
 
+
 #Testing if expected WriteError occurs when input data not compliant to validator
 @pytest.mark.integration
 def test_data_not_all_required_properties_only_bool(ok_dao):
     with pytest.raises(errors.WriteError):
         ok_dao.create({"my_bool":True})
 
+
 @pytest.mark.integration
 def test_data_not_all_required_properties_empty_data(ok_dao):
     with pytest.raises(errors.WriteError):
         ok_dao.create({})
+
 
 @pytest.mark.integration
 def test_data_all_required_properties_wrong_data_type_bool(ok_dao):
     with pytest.raises(errors.WriteError):
         ok_dao.create({"my_bool": "Jane", "my_string": "Tarzan"})
 
+
 @pytest.mark.integration
 def test_data_all_required_properties_wrong_data_type_string(ok_dao):
     with pytest.raises(errors.WriteError):
         ok_dao.create({"my_bool": True, "my_string": True})
+
 
 @pytest.mark.integration
 def test_null_values_not_allowed(ok_dao):
@@ -96,8 +102,10 @@ def test_null_values_not_allowed(ok_dao):
             "my_bool": True
         })
 
+
 # Since additionalProperties is not defined in the schema, MongoDB allows extra fields, 
 # so we should test that documents with additional fields are still accepted.”
+@pytest.mark.integration
 def test_extra_field_allowed_by_schema(ok_dao):
     result = ok_dao.create({
         "my_string": "Jane",
@@ -106,10 +114,11 @@ def test_extra_field_allowed_by_schema(ok_dao):
     })
     assert "unexpected" in result
 
+
 #Test uniqueItems
 """ @pytest.mark.integrations
 def test_not_unique_data(ok_dao):
-    #This test fails since uniqueItems in bson only works on bson arrays. We have implemented uniqueItems on a String
+    #This test fails since uniqueItems in bson only works on bson arrays. We have implemented uniqueItems on a String.
     same_name = "Karl"
     ok_dao.create({"my_string":same_name, "my_bool":False})
     with pytest.raises((errors.WriteError)):
