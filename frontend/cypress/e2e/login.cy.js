@@ -1,8 +1,8 @@
 describe('Logging into the system', () => {
   // define variables that we need on multiple occasions
-  let uid // user id
-  let name // name of the user (firstName + ' ' + lastName)
-  let email // email of the user
+  let uid// user id
+  let name// name of the user (firstName + ' ' + lastName)
+  let email// email of the user
 
   before(function () {
     // create a fabricated user from a fixture
