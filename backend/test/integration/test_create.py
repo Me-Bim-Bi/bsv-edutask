@@ -2,7 +2,6 @@
 import pytest
 from src.util.dao import DAO
 from pymongo import errors
-from src.util.validators import getValidator
 
 #Fixtures
 @pytest.fixture
