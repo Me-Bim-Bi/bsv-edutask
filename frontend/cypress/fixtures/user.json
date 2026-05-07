@@ -1,5 +1,12 @@
 {
+  "user1": {
     "email": "mon.doe@gmail.com",
     "firstName": "Mon",
     "lastName": "Doe"
+  },
+  "user2": {
+    "email": "anna.doe@gmail.com",
+    "firstName": "Anna",
+    "lastName": "Doe"
+  }
 }
