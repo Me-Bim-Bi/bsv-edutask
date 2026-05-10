@@ -67,6 +67,10 @@ describe('Manipulating the todo list (R8) - Add and Toggle', () => {
     cy.get('.todo-item').should('have.length', 2)
     cy.contains(task.newTodo).should('be.visible')
     cy.contains(task.todos).should('be.visible')
+
+    //Check if new todo item is active
+    cy.get('.todo-item').eq(1).find('.checker')
+      .should('have.class', 'unchecked')
   })
 
   it('R8UC1.2 - should have the Add button disabled when input is empty', () => {
